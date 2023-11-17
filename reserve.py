@@ -23,13 +23,13 @@ def sendEmail(receiver, content):
     except smtplib.SMTPException as e:
         return 'error', e
 
-import random
+import atexit
 
-# def vali_code(len=6):
-#     code_list = [str(i) for i in range(10)] + [chr(i) for i in range(65, 91)] + [chr(i) for i in range(97, 123)]
-#     myslice = random.sample(code_list, len)
-#     verification_code = ''.join(myslice)
-#     return verification_code
+def sendEmalibeforeExit(to_who,content):
+    # 保存数据的逻辑
+    sendEmail(to_who,content)
+    # print("正在保存数据...")
+
 
 
 from datetime import datetime, timedelta,time
@@ -366,8 +366,8 @@ def AutoLockDesk(userConfig):
                     endAhead(session,uuid)
                     responese=cancelResv(session,uuid)
                     print(responese['message'])
-                sendEmail(userConfig['mail'],'你已经退出系统，请注意不要违约！')
-                time.sleep(1)
+                # sendEmail(userConfig['mail'],'你已经退出系统，请注意不要违约！')
+                # time.sleep(1)
                 return
                 # pass
             # time.sleep(timeLength+60)
@@ -446,6 +446,7 @@ def main():
             'm': int(sys.argv[6]),
             'mail':sys.argv[7] if len(sys.argv)>7 else "xx@x.com"
         }
+    atexit.register(sendEmalibeforeExit,userConfig['mail'],'你已经退出系统，请注意不要违约！')#退出时发送邮件提醒
     AutoLockDesk(userConfig)
 
 if __name__ == "__main__":
