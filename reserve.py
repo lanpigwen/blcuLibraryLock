@@ -407,8 +407,17 @@ room={
     "5D":100455463
 }
 
+import ctypes
 
 def main():
+
+    # 定义常量
+    ES_CONTINUOUS = 0x80000000
+    ES_SYSTEM_REQUIRED = 0x00000001
+
+    # 阻止电脑休眠
+    ctypes.windll.kernel32.SetThreadExecutionState(ES_CONTINUOUS | ES_SYSTEM_REQUIRED)
+    #如果电脑休眠，就会导致时间不对
     print("""
 ————————————————————————————————————————————————————————————————————————————————————————————
     username        学号 
@@ -453,5 +462,6 @@ if __name__ == "__main__":
     main()
 
 
-
+#C:\Users\78381\Desktop\图书馆预约\newblcuLib\app.ico
+#pyinstaller -i C:\Users\78381\Desktop\图书馆预约\newblcuLib\app.ico -F -D reserve.py
 
