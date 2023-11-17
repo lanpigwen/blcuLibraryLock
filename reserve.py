@@ -1,3 +1,37 @@
+import smtplib
+from email.mime.text import MIMEText
+
+def sendEmail(receiver, content):
+    mail_host = 'smtp.163.com'
+    mail_user = 'blcu_access_system'
+    mail_pass = 'NYVBABPKROUMRMMO'
+    sender = 'blcu_access_system@163.com'
+
+    message = MIMEText(content, 'plain', 'utf-8')
+    message['Subject'] = '系统通知'
+    message['From'] = sender
+    message['To'] = receiver
+
+    try:
+        smtpObj = smtplib.SMTP(mail_host)
+        # 如果需要，使用STARTTLS
+        # smtpObj.starttls()
+        smtpObj.login(mail_user, mail_pass)
+        smtpObj.sendmail(sender, receiver, message.as_string())
+        smtpObj.quit()
+        return 'success'
+    except smtplib.SMTPException as e:
+        return 'error', e
+
+import random
+
+# def vali_code(len=6):
+#     code_list = [str(i) for i in range(10)] + [chr(i) for i in range(65, 91)] + [chr(i) for i in range(97, 123)]
+#     myslice = random.sample(code_list, len)
+#     verification_code = ''.join(myslice)
+#     return verification_code
+
+
 from datetime import datetime, timedelta,time
 import time as Time
 import sys
@@ -332,6 +366,8 @@ def AutoLockDesk(userConfig):
                     endAhead(session,uuid)
                     responese=cancelResv(session,uuid)
                     print(responese['message'])
+                sendEmail(userConfig['mail'],'你已经退出系统，请注意不要违约！')
+                time.sleep(1)
                 return
                 # pass
             # time.sleep(timeLength+60)
@@ -381,14 +417,15 @@ def main():
     deskId          座位号(例如: 1A001) 
     h               预约当前时间几个小时后开始 
     m               或者多少分钟后开始 
+    mail            输入邮箱号 用于提醒意外退出
 ————————————————————————————————————————————————————————————————————————————————————————————
 【注意事项】:电脑下载Chrome浏览器，且保持版本和reserve.exe同目录下的chromedriver.exe版本一致
 【注意事项】:https://chromedriver.chromium.org/ 可获取相应版本的chromedriver.exe    
 【注意事项】:请连接校园网使用！！！      
 """)
-
+    # print(len(sys.argv))
     # 将命令行参数转为字典
-    if len(sys.argv)<6:
+    if len(sys.argv)<7:
         userConfig = {
         'username': input("输入学号: "),
         'password': input("输入密码: "),
@@ -396,8 +433,10 @@ def main():
         'deskId': input("输入座位号(如1A001): "),
         'h': int(input("输入小时偏移量: ")),
         'm': int(input("输入分钟偏移量: ")),
+        'mail':input("输入邮箱(也可以不输入)")
         }        
     else:
+        # print(sys.argv)
         userConfig = {
             'username': sys.argv[1],
             'password': sys.argv[2],
@@ -405,8 +444,8 @@ def main():
             'deskId': sys.argv[4],
             'h': int(sys.argv[5]),
             'm': int(sys.argv[6]),
+            'mail':sys.argv[7] if len(sys.argv)>7 else "xx@x.com"
         }
-
     AutoLockDesk(userConfig)
 
 if __name__ == "__main__":

@@ -31,7 +31,7 @@ exe = EXE(
     target_arch=None,
     codesign_identity=None,
     entitlements_file=None,
-    icon=['C:\\Users\\78381\\Desktop\\newblcuLib\\app.ico'],
+    icon=['C:\\Users\\78381\\Desktop\\图书馆预约\\newblcuLib\\app.ico'],
 )
 coll = COLLECT(
     exe,
