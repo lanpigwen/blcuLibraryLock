@@ -383,7 +383,8 @@ def main():
     m               或者多少分钟后开始 
 ————————————————————————————————————————————————————————————————————————————————————————————
 【注意事项】:电脑下载Chrome浏览器，且保持版本和reserve.exe同目录下的chromedriver.exe版本一致
-【注意事项】:https://chromedriver.chromium.org/ 可获取相应版本的chromedriver.exe        
+【注意事项】:https://chromedriver.chromium.org/ 可获取相应版本的chromedriver.exe    
+【注意事项】:请连接校园网使用！！！      
 """)
 
     # 将命令行参数转为字典
