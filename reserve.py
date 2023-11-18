@@ -1,3 +1,6 @@
+from checkVersion import checkV
+
+
 import smtplib
 from email.mime.text import MIMEText
 
@@ -429,11 +432,13 @@ def main():
     mail            输入邮箱号 用于提醒意外退出
 ————————————————————————————————————————————————————————————————————————————————————————————
 【注意事项】:电脑下载Chrome浏览器，且保持版本和reserve.exe同目录下的chromedriver.exe版本一致
-【注意事项】:https://chromedriver.chromium.org/ 可获取相应版本的chromedriver.exe    
+【注意事项】:https://registry.npmmirror.com/binary.html?path=chromedriver/ 可获取相应版本的chromedriver.exe    
 【注意事项】:请连接校园网使用！！！      
 """)
     # print(len(sys.argv))
     # 将命令行参数转为字典
+
+    checkV(chrome_driver_path)
     if len(sys.argv)<7:
         userConfig = {
         'username': input("输入学号: "),
