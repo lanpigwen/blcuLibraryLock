@@ -339,7 +339,8 @@ def AutoLockDesk(userConfig):
         session,cookies,token,accNo=loginReturnSession(userConfig['username'],userConfig['password'])
         uuid,resvId,resvStatus,resvBegin,resvEnd,resvName,resvDevInfoList=getResvInfo(session)
         resvDev=findDeskNum(session,floorId=userConfig['floorId'],deskId=userConfig['deskId'])
-        
+        cancelOffTime=userConfig['cancelOffTime']
+        cancelOffset = timedelta(minutes=cancelOffTime)
         transStatus={
             '1093':"正在使用中",
             '3141':"正在暂离中",
@@ -349,19 +350,25 @@ def AutoLockDesk(userConfig):
         }
         resvStatus=str(resvStatus)
         print("【预约状态】: ",transStatus[resvStatus],end='  ')
-        
+        afterSleep=False
         if resvStatus=='1027':
             uuid,resvId,resvStatus,resvBegin,resvEnd,resvName,resvDevInfoList=getResvInfo(session)
             print()
             print("【预约信息】:",resvDevInfoList['roomName'],resvDevInfoList['devName'],resvBegin,resvEnd,resvName,"",sep='  ')
 
             time1 = datetime.now()
-            time2=datetime.strptime(resvBegin, '%Y-%m-%d %H-%M-%S')
-            time_difference=time2-time1
+            time2 = datetime.strptime(resvBegin, '%Y-%m-%d %H-%M-%S')
+            # print(time2)
+            cancelTime=time2+cancelOffset
+            # print("取消时间应为 ",cancelTime)
+            time_difference=cancelTime-time1
             timeLength=int(time_difference.total_seconds())
-            print(f' {int((timeLength+60)/60)} 分钟后重新预约...请勿关闭窗口(结束运行请按 Ctrl + c)...')
+            #应对系统更新，闸机会自动签到
+            print(f'  将于 {cancelTime} 重新预约...请勿关闭窗口(结束运行请按 Ctrl + c)...')
             try:
-                time.sleep(timeLength+60)
+                time.sleep(timeLength)
+                afterSleep=True
+                # print("sleep了",timeLength/60,"分钟")
             except KeyboardInterrupt:
                 print(' 是否需要取消已有预约？是(y) 否(n)')
                 deleteResv=input()
@@ -369,18 +376,15 @@ def AutoLockDesk(userConfig):
                     endAhead(session,uuid)
                     responese=cancelResv(session,uuid)
                     print(responese['message'])
-                # sendEmail(userConfig['mail'],'你已经退出系统，请注意不要违约！')
-                # time.sleep(1)
                 return
                 # pass
-            # time.sleep(timeLength+60)
         if resvStatus=='0':
             response=resvDesk(session,accNo,resvDev,userConfig['h'],userConfig['m'])
             print(response['message'])
             print("【新的预约】: ",end='')
             printInfo(response)
 
-        elif resvStatus=='1093' or resvStatus=='3141' or resvStatus=='1029':
+        elif afterSleep or resvStatus=='1093' or resvStatus=='3141' or resvStatus=='1029':
             endAhead(session,uuid)
             time.sleep(1)
             cancelResv(session,uuid)
@@ -447,7 +451,8 @@ def main():
         'deskId': input("输入座位号(如1A001): "),
         'h': int(input("输入小时偏移量: ")),
         'm': int(input("输入分钟偏移量: ")),
-        'mail':input("输入邮箱(也可以不输入)")
+        'mail':input("输入邮箱(也可以不输入)"),
+        'cancelOffTime':-12
         }        
     else:
         # print(sys.argv)
@@ -458,7 +463,8 @@ def main():
             'deskId': sys.argv[4],
             'h': int(sys.argv[5]),
             'm': int(sys.argv[6]),
-            'mail':sys.argv[7] if len(sys.argv)>7 else "xx@x.com"
+            'mail':sys.argv[7] if len(sys.argv)>7 else "xx@x.com",
+            'cancelOffTime' : int(sys.argv[8]) if len(sys.argv)>8 else -12,
         }
     atexit.register(sendEmalibeforeExit,userConfig['mail'],'你已经退出系统，请注意不要违约！')#退出时发送邮件提醒
     AutoLockDesk(userConfig)
@@ -470,3 +476,5 @@ if __name__ == "__main__":
 #C:\Users\78381\Desktop\图书馆预约\newblcuLib\app.ico
 #pyinstaller -i C:\Users\78381\Desktop\图书馆预约\newblcuLib\app.ico -F -D reserve.py
 
+#如果图书馆的预约又被修改回了过闸机就会签到，那么就把在预约状态的sleep时间调小一点，使得每次还没到可以签到的时候，
+#就会重新预约新的，这样就永远不会进入到 使用中 的状态，闸机也不会对你的出入产生对预约状态的改变
