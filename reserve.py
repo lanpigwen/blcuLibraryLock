@@ -360,11 +360,14 @@ def AutoLockDesk(userConfig):
             time2 = datetime.strptime(resvBegin, '%Y-%m-%d %H-%M-%S')
             # print(time2)
             cancelTime=time2+cancelOffset
+            #早上只能预约7点以后的
+            if cancelTime<cancelTime.replace(hour=7, minute=0, second=0):
+                cancelTime=cancelTime.replace(hour=7, minute=0, second=0)
             # print("取消时间应为 ",cancelTime)
             time_difference=cancelTime-time1
             timeLength=int(time_difference.total_seconds())
             #应对系统更新，闸机会自动签到
-            print(f'  将于 {cancelTime} 重新预约...请勿关闭窗口(结束运行请按 Ctrl + c)...')
+            print(f'{datetime.now().strftime("%Y-%m-%d %H:%M:%S")} 将于 {cancelTime} 重新预约...请勿关闭窗口(结束运行请按 Ctrl + c)...')
             try:
                 time.sleep(timeLength)
                 afterSleep=True
