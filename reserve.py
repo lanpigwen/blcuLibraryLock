@@ -386,8 +386,8 @@ def AutoLockDesk(userConfig):
             time_difference=cancelTime-time1
             timeLength=int(time_difference.total_seconds())
             #应对系统更新，闸机会自动签到
-            print(f'{datetime.now().strftime("%Y-%m-%d %H:%M:%S")} 将于 {cancelTime} 重新预约...请勿关闭窗口(结束运行请按 Ctrl + c)...')
-            logging.info(f' 将于 {cancelTime} 重新预约...\n请勿关闭窗口(结束运行请按 Ctrl + c)...')
+            print(f'{datetime.now().strftime("%Y-%m-%d %H:%M:%S")} 将于 {cancelTime} 重新预约...\n请勿关闭窗口(结束运行请按 Ctrl + c)...')
+            logging.info(f' 将于 {cancelTime} 重新预约...请勿关闭窗口(结束运行请按 Ctrl + c)...')
             try:
                 if timeLength>0:
                     time.sleep(timeLength)
