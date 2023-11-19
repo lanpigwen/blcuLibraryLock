@@ -380,7 +380,12 @@ def AutoLockDesk(userConfig):
             print(f'{datetime.now().strftime("%Y-%m-%d %H:%M:%S")} 将于 {cancelTime} 重新预约...请勿关闭窗口(结束运行请按 Ctrl + c)...')
             logging.info(f'{datetime.now().strftime("%Y-%m-%d %H:%M:%S")} 将于 {cancelTime} 重新预约...请勿关闭窗口(结束运行请按 Ctrl + c)...')
             try:
-                time.sleep(timeLength)
+                logging.error("计划睡 %s",timeLength)
+                if timeLength<0:
+                    logging.error("----------------timeLength 居然小于0！！！！---------------",timeLength)
+                else:
+                    time.sleep(timeLength)
+                    logging.error("睡醒")
                 afterSleep=True
                 # print("sleep了",timeLength/60,"分钟")
             except KeyboardInterrupt:
@@ -401,9 +406,10 @@ def AutoLockDesk(userConfig):
             printInfo(response)
             logging.info(response['message'])
             logging.info("【新的预约】: ")
-            logging.info(response)
-
-        elif afterSleep or resvStatus=='1093' or resvStatus=='3141' or resvStatus=='1029':
+            # logging.info(response)
+        logging.error(afterSleep)
+        if afterSleep or resvStatus=='1093' or resvStatus=='3141' or resvStatus=='1029':
+            logging.error("进入if afterSleep or resvStatus=='1093' or resvStatus=='3141' or resvStatus=='1029'")
             endAhead(session,uuid)
             time.sleep(1)
             cancelResv(session,uuid)
@@ -489,12 +495,16 @@ def main():
                     level=logging.INFO,
                     filename=userConfig['username']+'.log',
                     filemode='a')
-    atexit.register(sendEmalibeforeExit,userConfig['mail'],'你已经退出系统，请注意不要违约！')#退出时发送邮件提醒
+    # atexit.register(sendEmalibeforeExit,userConfig['mail'],'你已经退出系统，请注意不要违约！'+str(traceback.format_exc()))#退出时发送邮件提醒
     try:
         logging.info('————————————————————————————————————————————————————————————————————————————————————————')
         AutoLockDesk(userConfig)
+        atexit.register(sendEmalibeforeExit,userConfig['mail'],userConfig['username']+'已经退出系统，请注意不要违约！')#退出时发送邮件提醒
+
     except:
         logging.error(str(traceback.format_exc()))
+        atexit.register(sendEmalibeforeExit,userConfig['mail'],userConfig['username']+'错误退出！请及时查看！'+str(traceback.format_exc()))#退出时发送邮件提醒
+
 
 if __name__ == "__main__":
     main()
