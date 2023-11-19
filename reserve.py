@@ -4,6 +4,10 @@ from checkVersion import checkV
 import smtplib
 from email.mime.text import MIMEText
 
+import logging
+import traceback
+
+
 def sendEmail(receiver, content):
     mail_host = 'smtp.163.com'
     mail_user = 'blcu_access_system'
@@ -193,6 +197,7 @@ def printInfo(response):
         resvEnd=s2date(int(resvEnd))
     try:
         print(resvDevInfoList['roomName'],resvDevInfoList['devName'],resvBegin,resvEnd,resvName,"",sep='  ') 
+        logging.info("%s %s %s %s %s",resvDevInfoList['roomName'],resvDevInfoList['devName'],resvBegin,resvEnd,resvName)
     except:pass
 
 #获取预约信息
@@ -245,7 +250,9 @@ def templateLeave(session,resvId):
     }
 
     response = session.post(turl,json=tlPayload)#必须用json传，因为请求头的content-type  是 application/json
+
     print(response.text)
+    logging.info(response.text)
 
 
 #取消预约
@@ -350,11 +357,14 @@ def AutoLockDesk(userConfig):
         }
         resvStatus=str(resvStatus)
         print("【预约状态】: ",transStatus[resvStatus],end='  ')
+        logging.info("【预约状态】: %s",transStatus[resvStatus])
+
         afterSleep=False
         if resvStatus=='1027':
             uuid,resvId,resvStatus,resvBegin,resvEnd,resvName,resvDevInfoList=getResvInfo(session)
             print()
             print("【预约信息】:",resvDevInfoList['roomName'],resvDevInfoList['devName'],resvBegin,resvEnd,resvName,"",sep='  ')
+            logging.info("【预约信息】: %s %s %s %s %s",resvDevInfoList['roomName'],resvDevInfoList['devName'],resvBegin,resvEnd,resvName)
 
             time1 = datetime.now()
             time2 = datetime.strptime(resvBegin, '%Y-%m-%d %H-%M-%S')
@@ -368,6 +378,7 @@ def AutoLockDesk(userConfig):
             timeLength=int(time_difference.total_seconds())
             #应对系统更新，闸机会自动签到
             print(f'{datetime.now().strftime("%Y-%m-%d %H:%M:%S")} 将于 {cancelTime} 重新预约...请勿关闭窗口(结束运行请按 Ctrl + c)...')
+            logging.info(f'{datetime.now().strftime("%Y-%m-%d %H:%M:%S")} 将于 {cancelTime} 重新预约...请勿关闭窗口(结束运行请按 Ctrl + c)...')
             try:
                 time.sleep(timeLength)
                 afterSleep=True
@@ -375,10 +386,12 @@ def AutoLockDesk(userConfig):
             except KeyboardInterrupt:
                 print(' 是否需要取消已有预约？是(y) 否(n)')
                 deleteResv=input()
+                logging.info(' 是否需要取消已有预约？是(y) 否(n)---%s',deleteResv)
                 if deleteResv=='y':
                     endAhead(session,uuid)
                     responese=cancelResv(session,uuid)
                     print(responese['message'])
+                    logging.info(responese['message'])
                 return
                 # pass
         if resvStatus=='0':
@@ -386,6 +399,9 @@ def AutoLockDesk(userConfig):
             print(response['message'])
             print("【新的预约】: ",end='')
             printInfo(response)
+            logging.info(response['message'])
+            logging.info("【新的预约】: ")
+            logging.info(response)
 
         elif afterSleep or resvStatus=='1093' or resvStatus=='3141' or resvStatus=='1029':
             endAhead(session,uuid)
@@ -469,8 +485,16 @@ def main():
             'mail':sys.argv[7] if len(sys.argv)>7 else "xx@x.com",
             'cancelOffTime' : int(sys.argv[8]) if len(sys.argv)>8 else -12,
         }
+    logging.basicConfig(format='%(asctime)s -  %(message)s',
+                    level=logging.INFO,
+                    filename=userConfig['username']+'.log',
+                    filemode='a')
     atexit.register(sendEmalibeforeExit,userConfig['mail'],'你已经退出系统，请注意不要违约！')#退出时发送邮件提醒
-    AutoLockDesk(userConfig)
+    try:
+        logging.info('————————————————————————————————————————————————————————————————————————————————————————')
+        AutoLockDesk(userConfig)
+    except:
+        logging.error(str(traceback.format_exc()))
 
 if __name__ == "__main__":
     main()
@@ -478,6 +502,3 @@ if __name__ == "__main__":
 
 #C:\Users\78381\Desktop\图书馆预约\newblcuLib\app.ico
 #pyinstaller -i C:\Users\78381\Desktop\图书馆预约\newblcuLib\app.ico -F -D reserve.py
-
-#如果图书馆的预约又被修改回了过闸机就会签到，那么就把在预约状态的sleep时间调小一点，使得每次还没到可以签到的时候，
-#就会重新预约新的，这样就永远不会进入到 使用中 的状态，闸机也不会对你的出入产生对预约状态的改变
