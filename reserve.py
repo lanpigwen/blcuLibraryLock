@@ -196,8 +196,8 @@ def printInfo(response):
         resvEnd=str(data['resvEndTime'])[:10]
         resvEnd=s2date(int(resvEnd))
     try:
-        print(resvDevInfoList['roomName'],resvDevInfoList['devName'],resvBegin,resvEnd,resvName,"",sep='  ') 
-        logging.info("%s %s %s %s %s",resvDevInfoList['roomName'],resvDevInfoList['devName'],resvBegin,resvEnd,resvName)
+        print("【新的预约】: ",resvDevInfoList['roomName'],resvDevInfoList['devName'],resvBegin,resvEnd,resvName,"",sep='  ') 
+        logging.info("%s %s %s %s %s %s","【新的预约】: ",resvDevInfoList['roomName'],resvDevInfoList['devName'],resvBegin,resvEnd,resvName)
     except:pass
 
 #获取预约信息
@@ -251,8 +251,10 @@ def templateLeave(session,resvId):
 
     response = session.post(turl,json=tlPayload)#必须用json传，因为请求头的content-type  是 application/json
 
-    print(response.text)
-    logging.info(response.text)
+    # print(response.text)
+    response=json.loads(response.text)
+    logging.info('---暂离操作: '+response['message'])
+    return response
 
 
 #取消预约
@@ -263,11 +265,12 @@ def cancelResv(session,uuid):
     }
     response = session.post(durl,json=dlPayload)#必须用json传，因为请求头的content-type  是 application/json
     response=json.loads(response.text)
+    logging.info('---取消预约操作: '+response['message'])
     return response
 
 
 #获取座位号
-def findDeskNum(session,floorId=100455435,deskId='1C044'):
+def findDeskNum(session,floorId,deskId):
     roomurl='http://libkjyy.blcu.edu.cn/ic-web/reserve'
 
     resvDates=datetime.now().date().strftime('%Y%m%d')
@@ -318,7 +321,8 @@ def resvDesk(session,accNo,resvDev,hour=1,minute=0):
     # print(resvPayload)
     response=session.post(rurl,json=resvPayload)
     response=json.loads(response.text)
-
+    # print(response['message'])
+    logging.info('---预约操作: '+response['message'])
     return response
 
 
@@ -330,7 +334,7 @@ def endAhead(session,uuid):
     }
     response = session.post(endAheahUrl,json=endAheahPayload)
     response=json.loads(response.text)
-
+    logging.info('---提前离开操作: '+response['message'])
     return response
 
 
@@ -342,10 +346,16 @@ def AutoLockDesk(userConfig):
     若使用中/暂离中，则删除该次使用
     回到while第一句
     """
+
+    # session,cookies,token,accNo=loginReturnSession(userConfig['username'],userConfig['password'])
+    # uuid,resvId,resvStatus,resvBegin,resvEnd,resvName,resvDevInfoList=getResvInfo(session)
+    # resvDev=findDeskNum(session,floorId=userConfig['floorId'],deskId=userConfig['deskId'])
     while(1):
+
         session,cookies,token,accNo=loginReturnSession(userConfig['username'],userConfig['password'])
         uuid,resvId,resvStatus,resvBegin,resvEnd,resvName,resvDevInfoList=getResvInfo(session)
         resvDev=findDeskNum(session,floorId=userConfig['floorId'],deskId=userConfig['deskId'])
+
         cancelOffTime=userConfig['cancelOffTime']
         cancelOffset = timedelta(minutes=cancelOffTime)
         transStatus={
@@ -356,13 +366,12 @@ def AutoLockDesk(userConfig):
             '0':"没有预约信息"
         }
         resvStatus=str(resvStatus)
-        print("【预约状态】: ",transStatus[resvStatus],end='  ')
+        print("【预约状态】: ",transStatus[resvStatus])
         logging.info("【预约状态】: %s",transStatus[resvStatus])
 
         afterSleep=False
         if resvStatus=='1027':
             uuid,resvId,resvStatus,resvBegin,resvEnd,resvName,resvDevInfoList=getResvInfo(session)
-            print()
             print("【预约信息】:",resvDevInfoList['roomName'],resvDevInfoList['devName'],resvBegin,resvEnd,resvName,"",sep='  ')
             logging.info("【预约信息】: %s %s %s %s %s",resvDevInfoList['roomName'],resvDevInfoList['devName'],resvBegin,resvEnd,resvName)
 
@@ -378,16 +387,12 @@ def AutoLockDesk(userConfig):
             timeLength=int(time_difference.total_seconds())
             #应对系统更新，闸机会自动签到
             print(f'{datetime.now().strftime("%Y-%m-%d %H:%M:%S")} 将于 {cancelTime} 重新预约...请勿关闭窗口(结束运行请按 Ctrl + c)...')
-            logging.info(f'{datetime.now().strftime("%Y-%m-%d %H:%M:%S")} 将于 {cancelTime} 重新预约...请勿关闭窗口(结束运行请按 Ctrl + c)...')
+            logging.info(f' 将于 {cancelTime} 重新预约...\n请勿关闭窗口(结束运行请按 Ctrl + c)...')
             try:
-                logging.error("计划睡 %s",timeLength)
-                if timeLength<0:
-                    logging.error("----------------timeLength 居然小于0！！！！---------------",timeLength)
-                else:
+                if timeLength>0:
                     time.sleep(timeLength)
-                    logging.error("睡醒")
+                    #睡醒后应该要再次获得session
                 afterSleep=True
-                # print("sleep了",timeLength/60,"分钟")
             except KeyboardInterrupt:
                 print(' 是否需要取消已有预约？是(y) 否(n)')
                 deleteResv=input()
@@ -396,20 +401,12 @@ def AutoLockDesk(userConfig):
                     endAhead(session,uuid)
                     responese=cancelResv(session,uuid)
                     print(responese['message'])
-                    logging.info(responese['message'])
                 return
-                # pass
+        #sleep很久后需要重新拿cookie
         if resvStatus=='0':
             response=resvDesk(session,accNo,resvDev,userConfig['h'],userConfig['m'])
-            print(response['message'])
-            print("【新的预约】: ",end='')
             printInfo(response)
-            logging.info(response['message'])
-            logging.info("【新的预约】: ")
-            # logging.info(response)
-        logging.error(afterSleep)
         if afterSleep or resvStatus=='1093' or resvStatus=='3141' or resvStatus=='1029':
-            logging.error("进入if afterSleep or resvStatus=='1093' or resvStatus=='3141' or resvStatus=='1029'")
             endAhead(session,uuid)
             time.sleep(1)
             cancelResv(session,uuid)
