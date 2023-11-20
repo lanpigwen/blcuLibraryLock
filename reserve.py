@@ -6,7 +6,7 @@ from email.mime.text import MIMEText
 
 import logging
 import traceback
-
+tryagain=True
 
 def sendEmail(receiver, content):
     mail_host = 'smtp.163.com'
@@ -394,6 +394,7 @@ def AutoLockDesk(userConfig):
                     #睡醒后应该要再次获得session
                 afterSleep=True
             except KeyboardInterrupt:
+                tryagain=False
                 print(' 是否需要取消已有预约？是(y) 否(n)')
                 deleteResv=input()
                 logging.info(' 是否需要取消已有预约？是(y) 否(n)---%s',deleteResv)
@@ -493,15 +494,19 @@ def main():
                     filename=userConfig['username']+'.log',
                     filemode='a')
     # atexit.register(sendEmalibeforeExit,userConfig['mail'],'你已经退出系统，请注意不要违约！'+str(traceback.format_exc()))#退出时发送邮件提醒
-    try:
-        logging.info('————————————————————————————————————————————————————————————————————————————————————————')
-        AutoLockDesk(userConfig)
-        atexit.register(sendEmalibeforeExit,userConfig['mail'],userConfig['username']+'已经退出系统，请注意不要违约！')#退出时发送邮件提醒
+    tryTime=1
+    while tryagain and tryTime<=5:
+        try:
+            logging.info('————————————————————————————————————————————————————————————————————————————————————————')
+            AutoLockDesk(userConfig)
+            atexit.register(sendEmalibeforeExit,userConfig['mail'],userConfig['username']+'已经退出系统，请注意不要违约！')#退出时发送邮件提醒
 
-    except:
-        logging.error(str(traceback.format_exc()))
-        atexit.register(sendEmalibeforeExit,userConfig['mail'],userConfig['username']+'错误退出！请及时查看！'+str(traceback.format_exc()))#退出时发送邮件提醒
-
+        except:
+            tryTime+=1
+            logging.error(str(traceback.format_exc()))
+            if tryTime==5:
+                atexit.register(sendEmalibeforeExit,userConfig['mail'],userConfig['username']+f' 第{tryTime}次错误退出！请及时查看！'+str(traceback.format_exc()))#退出时发送邮件提醒
+ 
 
 if __name__ == "__main__":
     main()
