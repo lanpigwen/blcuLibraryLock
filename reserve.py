@@ -1,137 +1,22 @@
 from checkVersion import checkV
-
-
-import smtplib
-from email.mime.text import MIMEText
-
+from MailModel import sendEmalibeforeExit
+from TimeModel import resvTime,endTime,first_end_date,s2date
+import atexit
 import logging
 import traceback
-tryagain=True
-
-def sendEmail(receiver, content):
-    mail_host = 'smtp.163.com'
-    mail_user = 'blcu_access_system'
-    mail_pass = 'NYVBABPKROUMRMMO'
-    sender = 'blcu_access_system@163.com'
-
-    message = MIMEText(content, 'plain', 'utf-8')
-    message['Subject'] = '系统通知'
-    message['From'] = sender
-    message['To'] = receiver
-
-    try:
-        smtpObj = smtplib.SMTP(mail_host)
-        # 如果需要，使用STARTTLS
-        # smtpObj.starttls()
-        smtpObj.login(mail_user, mail_pass)
-        smtpObj.sendmail(sender, receiver, message.as_string())
-        smtpObj.quit()
-        return 'success'
-    except smtplib.SMTPException as e:
-        return 'error', e
-
-import atexit
-
-def sendEmalibeforeExit(to_who,content):
-    # 保存数据的逻辑
-    sendEmail(to_who,content)
-    # print("正在保存数据...")
-
-
-
-from datetime import datetime, timedelta,time
-import time as Time
 import sys
-
-def timeOffset(hour=1,minute=0):
-    """
-    预约 hour小时+minute分钟后的座位
-    """
-    minute=minute+(5 - minute % 5) % 5
-    # print(minute)
-
-    # 获取当前时间
-    current_time = datetime.now()
-
-    # 计算分钟的偏移，使其成为5的倍数
-    minutes_offset = (5 - current_time.minute % 5) % 5+minute
-
-    # 计算秒数的偏移，使其为0
-    seconds_offset = -current_time.second
-
-    # 计算小时的偏移，使其加1
-    hours_offset = hour
-
-    # 使用 timedelta 进行时间偏移
-    offset = timedelta(minutes=minutes_offset, seconds=seconds_offset, hours=hours_offset)
-    adjusted_time = current_time + offset
-    return adjusted_time
-
-
-def resvTime(hour=1,minute=0):
-    """
-    预约 hour小时+minute分钟后的座位
-    """
-    adjusted_time=timeOffset(hour,minute)
-    return adjusted_time.strftime('%Y-%m-%d %H:%M:%S')
-
-def endTime(hour=1,minute=0,h=22,m=0,s=0):
-    """
-    始终为当天的h:m:s
-    """
-    adjusted_time=timeOffset(hour,minute)
-    return adjusted_time.replace(hour=h, minute=m, second=s).strftime('%Y-%m-%d %H:%M:%S')
-
-
-def first_end_date():
-    current_date = datetime.now().date()
-
-    # 获取本月第一天
-    first_day = datetime(current_date.year, current_date.month, 1)
-
-    # 计算下个月的第一天，然后减去一天得到本月最后一天
-    last_day = datetime(current_date.year, current_date.month + 1, 1) - timedelta(days=1)
-
-    # 将日期格式化为字符串
-    formatted_first_day = first_day.strftime('%Y-%m-%d')
-    formatted_last_day = last_day.strftime('%Y-%m-%d')
-    return formatted_first_day,formatted_last_day
-
-
-def over1h(time_str1,time_str2):
-
-
-    # 将字符串转换为 datetime 对象
-    time1 = datetime.strptime(time_str1, '%Y-%m-%d %H:%M:%S')
-    time2 = datetime.strptime(time_str2, '%Y-%m-%d %H:%M:%S')
-
-    # 计算时间差
-    time_difference = time2 - time1
-
-    # 比较时间差是否大于1小时
-    if time1<time2 and time_difference > timedelta(hours=1) and time1.hour>=7:
-        # print("时间差大于1小时")
-        return 1
-    else:
-        return 0
-    
-def s2date(time_stamp):
-    time_struct = Time.localtime(time_stamp)    # 首先把时间戳转换为结构化时间
-    time_format = Time.strftime("%Y-%m-%d %H-%M-%S",time_struct)
-    return time_format
-
-
 import requests
-from urllib.parse import urlencode
 from selenium import webdriver
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
 import time
+from datetime import datetime, timedelta
 import json
 import os
-
+import ctypes
 from selenium.webdriver.chrome.service import Service
+
 
 current_directory = os.getcwd()
 chrome_driver_path = os.path.join(current_directory, 'chromedriver.exe')
@@ -240,7 +125,6 @@ def getResvInfo(session):
 
     return uuid,resvId,resvStatus,resvBegin,resvEnd,resvName,resvDevInfoList
     
-
 #暂离
 def templateLeave(session,resvId):
     turl='http://libkjyy.blcu.edu.cn/ic-web/seatOperation/tempLeave'
@@ -256,7 +140,6 @@ def templateLeave(session,resvId):
     logging.info('---暂离操作: '+response['message'])
     return response
 
-
 #取消预约
 def cancelResv(session,uuid):
     durl='http://libkjyy.blcu.edu.cn/ic-web/reserve/delete'
@@ -267,7 +150,6 @@ def cancelResv(session,uuid):
     response=json.loads(response.text)
     logging.info('---取消预约操作: '+response['message'])
     return response
-
 
 #获取座位号
 def findDeskNum(session,floorId,deskId):
@@ -289,21 +171,12 @@ def findDeskNum(session,floorId,deskId):
             break
     return resvDev
 
-
 #预约
-def resvDesk(session,accNo,resvDev,hour=1,minute=0):
+def resvDesk(session,accNo,resvDev,hour,minute):
+
     resvBeginTime=resvTime(hour,minute)
     resvEndTime=endTime(hour,minute)
 
-    if over1h(resvBeginTime,resvEndTime)==0:
-        #时间差不足1小时 或 开始时间早于7:00
-        # print("时间差不足1小时 或 开始时间早于7:00")
-        #可以预约明天的了7:00:00
-        resvBeginTime=endTime(8,0,h=7,m=0,s=0)
-        resvEndTime=endTime(8,0,h=22,m=0,s=0)
-    # print(resvBeginTime,resvEndTime)
-
-    
     rurl='http://libkjyy.blcu.edu.cn/ic-web/reserve'
 
     resvPayload={
@@ -318,13 +191,11 @@ def resvDesk(session,accNo,resvDev,hour=1,minute=0):
         "testName":""
     }
 
-    # print(resvPayload)
     response=session.post(rurl,json=resvPayload)
     response=json.loads(response.text)
-    # print(response['message'])
+
     logging.info('---预约操作: '+response['message'])
     return response
-
 
 #提前离开
 def endAhead(session,uuid):
@@ -338,7 +209,6 @@ def endAhead(session,uuid):
     return response
 
 
-
 def AutoLockDesk(userConfig):
     """
     逻辑为：先查看有无预约信息，若有预约信息且还不能签到，则查看预约的开始时间，sleep直到状态变为1029 可签到，
@@ -347,9 +217,6 @@ def AutoLockDesk(userConfig):
     回到while第一句
     """
 
-    # session,cookies,token,accNo=loginReturnSession(userConfig['username'],userConfig['password'])
-    # uuid,resvId,resvStatus,resvBegin,resvEnd,resvName,resvDevInfoList=getResvInfo(session)
-    # resvDev=findDeskNum(session,floorId=userConfig['floorId'],deskId=userConfig['deskId'])
     while(1):
 
         session,cookies,token,accNo=loginReturnSession(userConfig['username'],userConfig['password'])
@@ -358,13 +225,7 @@ def AutoLockDesk(userConfig):
 
         cancelOffTime=userConfig['cancelOffTime']
         cancelOffset = timedelta(minutes=cancelOffTime)
-        transStatus={
-            '1093':"正在使用中",
-            '3141':"正在暂离中",
-            '1027':"预约中(未到签到时间)",
-            '1029':"预约中(可签到)",
-            '0':"没有预约信息"
-        }
+
         resvStatus=str(resvStatus)
         print("【预约状态】: ",transStatus[resvStatus])
         logging.info("【预约状态】: %s",transStatus[resvStatus])
@@ -377,17 +238,10 @@ def AutoLockDesk(userConfig):
 
             time1 = datetime.now()
             time2 = datetime.strptime(resvBegin, '%Y-%m-%d %H-%M-%S')
-            # print(time2)
             cancelTime=time2+cancelOffset
             #早上只能预约7点以后的
             if cancelTime<cancelTime.replace(hour=7, minute=0, second=0):
                 cancelTime=cancelTime.replace(hour=7, minute=0, second=0)
-                #把7点的取消掉！
-                endAhead(session,uuid)
-                time.sleep(1)
-                cancelResv(session,uuid)
-                time.sleep(1)
-            # print("取消时间应为 ",cancelTime)
             time_difference=cancelTime-time1
             timeLength=int(time_difference.total_seconds())
             #应对系统更新，闸机会自动签到
@@ -396,10 +250,8 @@ def AutoLockDesk(userConfig):
             try:
                 if timeLength>0:
                     time.sleep(timeLength)
-                    #睡醒后应该要再次获得session
                 afterSleep=True
             except KeyboardInterrupt:
-                tryagain=False
                 print(' 是否需要取消已有预约？是(y) 否(n)')
                 deleteResv=input()
                 logging.info(' 是否需要取消已有预约？是(y) 否(n)---%s',deleteResv)
@@ -407,19 +259,22 @@ def AutoLockDesk(userConfig):
                     endAhead(session,uuid)
                     responese=cancelResv(session,uuid)
                     print(responese['message'])
-                return
-        #sleep很久后需要重新拿cookie
+                return True
+
         if resvStatus=='0':
-            response=resvDesk(session,accNo,resvDev,userConfig['h'],userConfig['m'])
-            printInfo(response)
+            if datetime.now().hour==21:
+                input("已经超过21点 无法再预约！！！ Enter退出")
+                return
+            else:
+                response=resvDesk(session,accNo,resvDev,userConfig['h'],userConfig['m'])
+                printInfo(response)
         if afterSleep or resvStatus=='1093' or resvStatus=='3141' or resvStatus=='1029':
             endAhead(session,uuid)
             time.sleep(1)
             cancelResv(session,uuid)
             time.sleep(1)
 
-
-
+    return False
 
 
 room={
@@ -442,14 +297,21 @@ room={
     "5D":100455463
 }
 
-import ctypes
+transStatus={
+    '1093':"正在使用中",
+    '3141':"正在暂离中",
+    '1027':"预约中(未到签到时间)",
+    '1029':"预约中(可签到)",
+    '0':"没有预约信息"
+}
 
 def main():
 
     # 定义常量
     ES_CONTINUOUS = 0x80000000
     ES_SYSTEM_REQUIRED = 0x00000001
-
+    quitTry=False
+    tryTime=1
     # 阻止电脑休眠
     ctypes.windll.kernel32.SetThreadExecutionState(ES_CONTINUOUS | ES_SYSTEM_REQUIRED)
     #如果电脑休眠，就会导致时间不对
@@ -467,8 +329,6 @@ def main():
 【注意事项】:https://registry.npmmirror.com/binary.html?path=chromedriver/ 可获取相应版本的chromedriver.exe    
 【注意事项】:请连接校园网使用！！！      
 """)
-    # print(len(sys.argv))
-    # 将命令行参数转为字典
 
     checkV(chrome_driver_path)
     if len(sys.argv)<7:
@@ -483,7 +343,6 @@ def main():
         'cancelOffTime':-12
         }        
     else:
-        # print(sys.argv)
         userConfig = {
             'username': sys.argv[1],
             'password': sys.argv[2],
@@ -498,16 +357,15 @@ def main():
                     level=logging.INFO,
                     filename=userConfig['username']+'.log',
                     filemode='a')
-    # atexit.register(sendEmalibeforeExit,userConfig['mail'],'你已经退出系统，请注意不要违约！'+str(traceback.format_exc()))#退出时发送邮件提醒
-    tryTime=1
-    while tryagain and tryTime<=5:
+    while quitTry==False and tryTime<=5:
         try:
-            logging.info('————————————————————————————————————————————————————————————————————————————————————————')
-            AutoLockDesk(userConfig)
-            atexit.register(sendEmalibeforeExit,userConfig['mail'],userConfig['username']+'已经退出系统，请注意不要违约！')#退出时发送邮件提醒
-
-        except:
             tryTime+=1
+            logging.info('————————————————————————————————————————————————————————————————————————————————————————')
+            quitTry=AutoLockDesk(userConfig)
+            atexit.register(sendEmalibeforeExit,userConfig['mail'],userConfig['username']+'已经退出系统，请注意不要违约！')#退出时发送邮件提醒
+        except KeyboardInterrupt:
+            quitTry=True
+        except:
             logging.error(str(traceback.format_exc()))
             if tryTime==5:
                 atexit.register(sendEmalibeforeExit,userConfig['mail'],userConfig['username']+f' 第{tryTime}次错误退出！请及时查看！'+str(traceback.format_exc()))#退出时发送邮件提醒
