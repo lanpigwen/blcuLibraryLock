@@ -382,6 +382,11 @@ def AutoLockDesk(userConfig):
             #早上只能预约7点以后的
             if cancelTime<cancelTime.replace(hour=7, minute=0, second=0):
                 cancelTime=cancelTime.replace(hour=7, minute=0, second=0)
+                #把7点的取消掉！
+                endAhead(session,uuid)
+                time.sleep(1)
+                cancelResv(session,uuid)
+                time.sleep(1)
             # print("取消时间应为 ",cancelTime)
             time_difference=cancelTime-time1
             timeLength=int(time_difference.total_seconds())
