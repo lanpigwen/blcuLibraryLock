@@ -239,6 +239,9 @@ def AutoLockDesk(userConfig):
             time1 = datetime.now()
             time2 = datetime.strptime(resvBegin, '%Y-%m-%d %H-%M-%S')
             cancelTime=time2+cancelOffset
+            #添加一个如果约的是21点，则offset=0
+            if time2.hour==21 or time2.hour==7:
+                cancelTime=time2
             #早上只能预约7点以后的
             if cancelTime<cancelTime.replace(hour=7, minute=0, second=0):
                 cancelTime=cancelTime.replace(hour=7, minute=0, second=0)
