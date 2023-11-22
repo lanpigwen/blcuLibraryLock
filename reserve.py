@@ -312,13 +312,13 @@ transStatus={
 def main():
 
     # 定义常量
-    # ES_CONTINUOUS = 0x80000000
-    # ES_SYSTEM_REQUIRED = 0x00000001
+    ES_CONTINUOUS = 0x80000000
+    ES_SYSTEM_REQUIRED = 0x00000001
     quitTry=False
     tryTime=1
     # 阻止电脑休眠
-    # ctypes.windll.kernel32.SetThreadExecutionState(ES_CONTINUOUS | ES_SYSTEM_REQUIRED) 这样防止休眠好像没用
-    ctypes.windll.kernel32.SetThreadExecutionState(0x80000002)
+    ctypes.windll.kernel32.SetThreadExecutionState(ES_CONTINUOUS | ES_SYSTEM_REQUIRED)
+    # ctypes.windll.kernel32.SetThreadExecutionState(0x80000002)这种会有效的阻止休眠 但是关不了屏幕
     #如果电脑休眠，就会导致时间不对
     print("""
 ————————————————————————————————————————————————————————————————————————————————————————————
