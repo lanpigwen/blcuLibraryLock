@@ -252,7 +252,10 @@ def AutoLockDesk(userConfig):
             logging.info(f' 将于 {cancelTime} 重新预约...请勿关闭窗口(结束运行请按 Ctrl + c)...')
             try:
                 if timeLength>0:
-                    ctypes.windll.kernel32.SetThreadExecutionState(0x80000002)
+                    # ctypes.windll.kernel32.SetThreadExecutionState(0x80000002)
+                    ES_CONTINUOUS = 0x80000000
+                    ES_SYSTEM_REQUIRED = 0x00000001
+                    ctypes.windll.kernel32.SetThreadExecutionState(ES_CONTINUOUS | ES_SYSTEM_REQUIRED)
                     time.sleep(timeLength)
                 afterSleep=True
             except KeyboardInterrupt:
