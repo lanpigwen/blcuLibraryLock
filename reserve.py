@@ -354,7 +354,8 @@ def main():
         'h': int(input("输入小时偏移量: ")),
         'm': int(input("输入分钟偏移量: ")),
         'mail':input("输入邮箱(也可以不输入)"),
-        'cancelOffTime':-12
+        'cancelOffTime':-12,
+        'failtime':10
         }        
     else:
         userConfig = {
@@ -366,12 +367,14 @@ def main():
             'm': int(sys.argv[6]),
             'mail':sys.argv[7] if len(sys.argv)>7 else "xx@x.com",
             'cancelOffTime' : int(sys.argv[8]) if len(sys.argv)>8 else -12,
+            'failtime':int(sys.argv[9]) if len(sys.argv)>9 else 10,
         }
     logging.basicConfig(format='%(asctime)s -  %(message)s',
                     level=logging.INFO,
                     filename=userConfig['username']+'.log',
                     filemode='a')
-    while quitTry==False and tryTime<=5:
+    failtime=userConfig['failtime']
+    while quitTry==False and tryTime<=failtime:
         try:
             tryTime+=1
             logging.info('————————————————————————————————————————————————————————————————————————————————————————')
@@ -381,7 +384,9 @@ def main():
             quitTry=True
         except:
             logging.error(str(traceback.format_exc()))
-            if tryTime==5:
+            if tryTime==failtime/2:
+                time.sleep(5)
+            if tryTime==failtime:
                 atexit.register(sendEmalibeforeExit,userConfig['mail'],userConfig['username']+f' 第{tryTime}次错误退出！请及时查看！'+str(traceback.format_exc()))#退出时发送邮件提醒
  
 
