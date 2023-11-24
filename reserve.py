@@ -16,6 +16,8 @@ import json
 import os
 import ctypes
 from selenium.webdriver.chrome.service import Service
+from selenium.webdriver.common.action_chains import ActionChains
+
 
 
 current_directory = os.getcwd()
@@ -25,16 +27,20 @@ chrome_driver_path = os.path.join(current_directory, 'chromedriver.exe')
 def loginReturnSession(my_username,my_password):
     options = webdriver.ChromeOptions()
     s= Service(chrome_driver_path)
+    
     options.add_argument('headless')#不跳出来
     options.add_argument("--disable-gpu")  # 关闭硬件加速，不然会闪屏
     driver = webdriver.Edge(options=options,service=s)
     driver.get("http://libkjyy.blcu.edu.cn/mobile.html#/login")
 
     WAIT = WebDriverWait(driver, 5)
+    ccc = WAIT.until(EC.presence_of_element_located((By.XPATH, '/html/body/div/div/div/div/div/div[1]/div/div[1]')))
+    #因为有 中文模式 英文模式 繁体字模式  有三个form 所以要点到 中文form
+    ActionChains(driver).move_to_element(ccc).click().perform()#点击到中文    
     username = WAIT.until(EC.presence_of_element_located((By.XPATH, '/html/body/div/div/div/div/div/div[2]/div[1]/div/div[1]/div[2]/input')))
     password = WAIT.until(EC.presence_of_element_located((By.XPATH, '/html/body/div/div/div/div/div/div[2]/div[1]/div/div[2]/div[2]/input')))
     submit = WAIT.until(EC.element_to_be_clickable((By.XPATH, '/html/body/div/div/div/div/div/div[2]/div[1]/button')))
-
+   
     username.send_keys(my_username)
     password.send_keys(my_password)
     submit.click()
