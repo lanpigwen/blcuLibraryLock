@@ -264,6 +264,11 @@ def AutoLockDesk(userConfig):
                     ctypes.windll.kernel32.SetThreadExecutionState(ES_CONTINUOUS | ES_SYSTEM_REQUIRED)
                     time.sleep(timeLength)
                 afterSleep=True
+                #睡醒后再获得一次新session
+                session,cookies,token,accNo=loginReturnSession(userConfig['username'],userConfig['password'])
+                uuid,resvId,resvStatus,resvBegin,resvEnd,resvName,resvDevInfoList=getResvInfo(session)
+                resvDev=findDeskNum(session,floorId=userConfig['floorId'],deskId=userConfig['deskId'])
+
             except KeyboardInterrupt:
                 print(' 是否需要取消已有预约？是(y) 否(n)')
                 deleteResv=input()

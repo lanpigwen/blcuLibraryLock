@@ -50,9 +50,12 @@ def first_end_date():
 
     # 获取本月第一天
     first_day = datetime(current_date.year, current_date.month, 1)
-
+    if current_date.month==12:
+        last_day = datetime(current_date.year + 1, 1, 1) - timedelta(days=1)
+    else:
+    # print((current_date.month + 1)%13)
     # 计算下个月的第一天，然后减去一天得到本月最后一天
-    last_day = datetime(current_date.year, current_date.month + 1, 1) - timedelta(days=1)
+        last_day = datetime(current_date.year, current_date.month + 1, 1) - timedelta(days=1)
 
     # 将日期格式化为字符串
     formatted_first_day = first_day.strftime('%Y-%m-%d')
@@ -80,3 +83,6 @@ def s2date(time_stamp):
     time_struct = Time.localtime(time_stamp)    # 首先把时间戳转换为结构化时间
     time_format = Time.strftime("%Y-%m-%d %H-%M-%S",time_struct)
     return time_format
+
+
+print(first_end_date())
