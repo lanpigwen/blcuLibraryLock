@@ -28,6 +28,10 @@ def loginReturnSession(my_username,my_password):
     options = webdriver.ChromeOptions()
     s= Service(chrome_driver_path)
     
+    options.add_argument('--no-sandbox')
+    options.add_argument('--disable-dev-shm-usage')
+    options.add_argument('--disable-gpu')
+    
     options.add_argument('headless')#不跳出来
     options.add_argument("--disable-gpu")  # 关闭硬件加速，不然会闪屏
     driver = webdriver.Edge(options=options,service=s)
@@ -389,8 +393,11 @@ def main():
             quitTry=True
         except:
             logging.error(str(traceback.format_exc()))
+            if tryTime==5:
+                atexit.register(sendEmalibeforeExit,userConfig['mail'],userConfig['username']+f' 第{tryTime}次错误退出！请及时查看！'+str(traceback.format_exc()))#退出时发送邮件提醒
             if tryTime==failtime/2:
                 time.sleep(5)
+                atexit.register(sendEmalibeforeExit,userConfig['mail'],userConfig['username']+f' 第{tryTime}次错误退出！请及时查看！'+str(traceback.format_exc()))#退出时发送邮件提醒
             if tryTime==failtime:
                 atexit.register(sendEmalibeforeExit,userConfig['mail'],userConfig['username']+f' 第{tryTime}次错误退出！请及时查看！'+str(traceback.format_exc()))#退出时发送邮件提醒
  

@@ -75,31 +75,41 @@ def downLoadDriver(save_d,c_v,os_v='win',vlistURL='https://registry.npmmirror.co
         '118':"https://edgedl.me.gvt1.com/edgedl/chrome/chrome-for-testing/118.0.5993.3/win64/chromedriver-win64.zip",
         '119':"https://edgedl.me.gvt1.com/edgedl/chrome/chrome-for-testing/119.0.6045.105/win64/chromedriver-win64.zip",
         '120':"https://edgedl.me.gvt1.com/edgedl/chrome/chrome-for-testing/120.0.6099.28/win64/chromedriver-win64.zip",
-        '121':"https://edgedl.me.gvt1.com/edgedl/chrome/chrome-for-testing/121.0.6129.0/win64/chromedriver-win64.zip"
+        '121':"https://edgedl.me.gvt1.com/edgedl/chrome/chrome-for-testing/121.0.6129.0/win64/chromedriver-win64.zip",
+        '122':"https://storage.googleapis.com/chrome-for-testing-public/122.0.6261.111/win64/chromedriver-win64.zip"
     }
     os_version={
         'win':"chromedriver_win32.zip",
         'mac':"chromedriver_mac64.zip",
         'mac_ml':"chromedriver_mac64_m1.zip"
     }
-    if int(c_v.split('.')[0])>114:
-        # print("大于114的版本")
-        os_v="chromedriver-win64.zip"
-        downUrl=highURL[c_v.split('.')[0]]
-    else:
-        os_v=os_version[os_v]
-        downBaseURL=''
-        vlist=requests.get(vlistURL).text
-        vlist=json.loads(vlist)
-        for i in vlist:
-            d_v=i['name'].split('.')
-            d_v=d_v[:-1]
-            d_v='.'.join(d_v)
-            if d_v==c_v:
-                downBaseURL=i['url']
-                break
-        downUrl = urllib.parse.urljoin(downBaseURL, os_v) # 拼接出下载路径
+    try:
+        if int(c_v.split('.')[0])>122:
+            print("对于版本大于122.*.*的chrome浏览器：")
+            print("请手动前往https://storage.googleapis.com/chrome-for-testing-public/ 下载对应的chromedriver版本")
+            keyIN=input()
+        elif int(c_v.split('.')[0])>114:
+            # print("大于114的版本")
+            os_v="chromedriver-win64.zip"
+            downUrl=highURL[c_v.split('.')[0]]
+        else:
+            os_v=os_version[os_v]
+            downBaseURL=''
+            vlist=requests.get(vlistURL).text
+            vlist=json.loads(vlist)
+            for i in vlist:
+                d_v=i['name'].split('.')
+                d_v=d_v[:-1]
+                d_v='.'.join(d_v)
+                if d_v==c_v:
+                    downBaseURL=i['url']
+                    break
+            downUrl = urllib.parse.urljoin(downBaseURL, os_v) # 拼接出下载路径
+    except:
+        print("对齐版本失败")
+        keyIN=input()
 
+        
     file = os.path.join(save_d, os.path.basename(downUrl))
     print('will saved in {}'.format(file))
     # 开始下载，并显示下载进度(progressFunc)

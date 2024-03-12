@@ -84,5 +84,3 @@ def s2date(time_stamp):
     time_format = Time.strftime("%Y-%m-%d %H-%M-%S",time_struct)
     return time_format
 
-
-print(first_end_date())

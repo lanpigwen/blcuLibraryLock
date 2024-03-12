@@ -1,260 +1,35 @@
-2023-11-24 09:47:30,921 -  ————————————————————————————————————————————————————————————————————————————————————————
-2023-11-24 09:47:40,858 -  Traceback (most recent call last):
-  File "C:\Users\78381\Desktop\图书馆预约\newblcuLib\reserve.py", line 381, in main
-    quitTry=AutoLockDesk(userConfig)
-  File "C:\Users\78381\Desktop\图书馆预约\newblcuLib\reserve.py", line 228, in AutoLockDesk
-    session,cookies,token,accNo=loginReturnSession(userConfig['username'],userConfig['password'])
-  File "C:\Users\78381\Desktop\图书馆预约\newblcuLib\reserve.py", line 37, in loginReturnSession
-    ccc = WAIT.until(EC.presence_of_element_located((By.XPATH, '/html/body/div/div/div/div/div/div[1]/div/div[1]')))
-  File "C:\Users\78381\anaconda3\lib\site-packages\selenium\webdriver\support\wait.py", line 101, in until
-    raise TimeoutException(message, screen, stacktrace)
-selenium.common.exceptions.TimeoutException: Message: 
-Stacktrace:
-	GetHandleVerifier [0x002672A3+45731]
-	(No symbol) [0x001F2D51]
-	(No symbol) [0x000E880D]
-	(No symbol) [0x0011B940]
-	(No symbol) [0x0011BE0B]
-	(No symbol) [0x0014D1F2]
-	(No symbol) [0x00138024]
-	(No symbol) [0x0014B7A2]
-	(No symbol) [0x00137DD6]
-	(No symbol) [0x001131F6]
-	(No symbol) [0x0011439D]
-	GetHandleVerifier [0x00570716+3229462]
-	GetHandleVerifier [0x005B84C8+3523784]
-	GetHandleVerifier [0x005B214C+3498316]
-	GetHandleVerifier [0x002F1680+611968]
-	(No symbol) [0x001FCCCC]
-	(No symbol) [0x001F8DF8]
-	(No symbol) [0x001F8F1D]
-	(No symbol) [0x001EB2C7]
-	BaseThreadInitThunk [0x755C7BA9+25]
-	RtlInitializeExceptionChain [0x76FBBD2B+107]
-	RtlClearBits [0x76FBBCAF+191]
-	(No symbol) [0x00000000]
-
-
-2023-11-24 09:47:42,921 -  ————————————————————————————————————————————————————————————————————————————————————————
-2023-11-24 09:47:52,721 -  Traceback (most recent call last):
-  File "C:\Users\78381\Desktop\图书馆预约\newblcuLib\reserve.py", line 381, in main
-    quitTry=AutoLockDesk(userConfig)
-  File "C:\Users\78381\Desktop\图书馆预约\newblcuLib\reserve.py", line 228, in AutoLockDesk
-    session,cookies,token,accNo=loginReturnSession(userConfig['username'],userConfig['password'])
-  File "C:\Users\78381\Desktop\图书馆预约\newblcuLib\reserve.py", line 37, in loginReturnSession
-    ccc = WAIT.until(EC.presence_of_element_located((By.XPATH, '/html/body/div/div/div/div/div/div[1]/div/div[1]')))
-  File "C:\Users\78381\anaconda3\lib\site-packages\selenium\webdriver\support\wait.py", line 101, in until
-    raise TimeoutException(message, screen, stacktrace)
-selenium.common.exceptions.TimeoutException: Message: 
-Stacktrace:
-	GetHandleVerifier [0x002672A3+45731]
-	(No symbol) [0x001F2D51]
-	(No symbol) [0x000E880D]
-	(No symbol) [0x0011B940]
-	(No symbol) [0x0011BE0B]
-	(No symbol) [0x0014D1F2]
-	(No symbol) [0x00138024]
-	(No symbol) [0x0014B7A2]
-	(No symbol) [0x00137DD6]
-	(No symbol) [0x001131F6]
-	(No symbol) [0x0011439D]
-	GetHandleVerifier [0x00570716+3229462]
-	GetHandleVerifier [0x005B84C8+3523784]
-	GetHandleVerifier [0x005B214C+3498316]
-	GetHandleVerifier [0x002F1680+611968]
-	(No symbol) [0x001FCCCC]
-	(No symbol) [0x001F8DF8]
-	(No symbol) [0x001F8F1D]
-	(No symbol) [0x001EB2C7]
-	BaseThreadInitThunk [0x755C7BA9+25]
-	RtlInitializeExceptionChain [0x76FBBD2B+107]
-	RtlClearBits [0x76FBBCAF+191]
-	(No symbol) [0x00000000]
-
-
-2023-11-24 09:47:54,766 -  ————————————————————————————————————————————————————————————————————————————————————————
-2023-11-24 09:48:04,575 -  Traceback (most recent call last):
-  File "C:\Users\78381\Desktop\图书馆预约\newblcuLib\reserve.py", line 381, in main
-    quitTry=AutoLockDesk(userConfig)
-  File "C:\Users\78381\Desktop\图书馆预约\newblcuLib\reserve.py", line 228, in AutoLockDesk
-    session,cookies,token,accNo=loginReturnSession(userConfig['username'],userConfig['password'])
-  File "C:\Users\78381\Desktop\图书馆预约\newblcuLib\reserve.py", line 37, in loginReturnSession
-    ccc = WAIT.until(EC.presence_of_element_located((By.XPATH, '/html/body/div/div/div/div/div/div[1]/div/div[1]')))
-  File "C:\Users\78381\anaconda3\lib\site-packages\selenium\webdriver\support\wait.py", line 101, in until
-    raise TimeoutException(message, screen, stacktrace)
-selenium.common.exceptions.TimeoutException: Message: 
-Stacktrace:
-	GetHandleVerifier [0x002672A3+45731]
-	(No symbol) [0x001F2D51]
-	(No symbol) [0x000E880D]
-	(No symbol) [0x0011B940]
-	(No symbol) [0x0011BE0B]
-	(No symbol) [0x0014D1F2]
-	(No symbol) [0x00138024]
-	(No symbol) [0x0014B7A2]
-	(No symbol) [0x00137DD6]
-	(No symbol) [0x001131F6]
-	(No symbol) [0x0011439D]
-	GetHandleVerifier [0x00570716+3229462]
-	GetHandleVerifier [0x005B84C8+3523784]
-	GetHandleVerifier [0x005B214C+3498316]
-	GetHandleVerifier [0x002F1680+611968]
-	(No symbol) [0x001FCCCC]
-	(No symbol) [0x001F8DF8]
-	(No symbol) [0x001F8F1D]
-	(No symbol) [0x001EB2C7]
-	BaseThreadInitThunk [0x755C7BA9+25]
-	RtlInitializeExceptionChain [0x76FBBD2B+107]
-	RtlClearBits [0x76FBBCAF+191]
-	(No symbol) [0x00000000]
-
-
-2023-11-24 09:48:06,622 -  ————————————————————————————————————————————————————————————————————————————————————————
-2023-11-24 09:48:16,405 -  Traceback (most recent call last):
-  File "C:\Users\78381\Desktop\图书馆预约\newblcuLib\reserve.py", line 381, in main
-    quitTry=AutoLockDesk(userConfig)
-  File "C:\Users\78381\Desktop\图书馆预约\newblcuLib\reserve.py", line 228, in AutoLockDesk
-    session,cookies,token,accNo=loginReturnSession(userConfig['username'],userConfig['password'])
-  File "C:\Users\78381\Desktop\图书馆预约\newblcuLib\reserve.py", line 37, in loginReturnSession
-    ccc = WAIT.until(EC.presence_of_element_located((By.XPATH, '/html/body/div/div/div/div/div/div[1]/div/div[1]')))
-  File "C:\Users\78381\anaconda3\lib\site-packages\selenium\webdriver\support\wait.py", line 101, in until
-    raise TimeoutException(message, screen, stacktrace)
-selenium.common.exceptions.TimeoutException: Message: 
-Stacktrace:
-	GetHandleVerifier [0x002672A3+45731]
-	(No symbol) [0x001F2D51]
-	(No symbol) [0x000E880D]
-	(No symbol) [0x0011B940]
-	(No symbol) [0x0011BE0B]
-	(No symbol) [0x0014D1F2]
-	(No symbol) [0x00138024]
-	(No symbol) [0x0014B7A2]
-	(No symbol) [0x00137DD6]
-	(No symbol) [0x001131F6]
-	(No symbol) [0x0011439D]
-	GetHandleVerifier [0x00570716+3229462]
-	GetHandleVerifier [0x005B84C8+3523784]
-	GetHandleVerifier [0x005B214C+3498316]
-	GetHandleVerifier [0x002F1680+611968]
-	(No symbol) [0x001FCCCC]
-	(No symbol) [0x001F8DF8]
-	(No symbol) [0x001F8F1D]
-	(No symbol) [0x001EB2C7]
-	BaseThreadInitThunk [0x755C7BA9+25]
-	RtlInitializeExceptionChain [0x76FBBD2B+107]
-	RtlClearBits [0x76FBBCAF+191]
-	(No symbol) [0x00000000]
-
-
-2023-11-24 09:48:18,461 -  ————————————————————————————————————————————————————————————————————————————————————————
-2023-11-24 09:48:28,217 -  Traceback (most recent call last):
-  File "C:\Users\78381\Desktop\图书馆预约\newblcuLib\reserve.py", line 381, in main
-    quitTry=AutoLockDesk(userConfig)
-  File "C:\Users\78381\Desktop\图书馆预约\newblcuLib\reserve.py", line 228, in AutoLockDesk
-    session,cookies,token,accNo=loginReturnSession(userConfig['username'],userConfig['password'])
-  File "C:\Users\78381\Desktop\图书馆预约\newblcuLib\reserve.py", line 37, in loginReturnSession
-    ccc = WAIT.until(EC.presence_of_element_located((By.XPATH, '/html/body/div/div/div/div/div/div[1]/div/div[1]')))
-  File "C:\Users\78381\anaconda3\lib\site-packages\selenium\webdriver\support\wait.py", line 101, in until
-    raise TimeoutException(message, screen, stacktrace)
-selenium.common.exceptions.TimeoutException: Message: 
-Stacktrace:
-	GetHandleVerifier [0x002672A3+45731]
-	(No symbol) [0x001F2D51]
-	(No symbol) [0x000E880D]
-	(No symbol) [0x0011B940]
-	(No symbol) [0x0011BE0B]
-	(No symbol) [0x0014D1F2]
-	(No symbol) [0x00138024]
-	(No symbol) [0x0014B7A2]
-	(No symbol) [0x00137DD6]
-	(No symbol) [0x001131F6]
-	(No symbol) [0x0011439D]
-	GetHandleVerifier [0x00570716+3229462]
-	GetHandleVerifier [0x005B84C8+3523784]
-	GetHandleVerifier [0x005B214C+3498316]
-	GetHandleVerifier [0x002F1680+611968]
-	(No symbol) [0x001FCCCC]
-	(No symbol) [0x001F8DF8]
-	(No symbol) [0x001F8F1D]
-	(No symbol) [0x001EB2C7]
-	BaseThreadInitThunk [0x755C7BA9+25]
-	RtlInitializeExceptionChain [0x76FBBD2B+107]
-	RtlClearBits [0x76FBBCAF+191]
-	(No symbol) [0x00000000]
-
-
-2023-11-24 09:48:30,250 -  ————————————————————————————————————————————————————————————————————————————————————————
-2023-11-24 09:48:49,520 -  ————————————————————————————————————————————————————————————————————————————————————————
-2023-11-24 09:49:00,964 -  Traceback (most recent call last):
-  File "C:\Users\78381\Desktop\图书馆预约\newblcuLib\reserve.py", line 381, in main
-    quitTry=AutoLockDesk(userConfig)
-  File "C:\Users\78381\Desktop\图书馆预约\newblcuLib\reserve.py", line 228, in AutoLockDesk
-    session,cookies,token,accNo=loginReturnSession(userConfig['username'],userConfig['password'])
-  File "C:\Users\78381\Desktop\图书馆预约\newblcuLib\reserve.py", line 37, in loginReturnSession
-    ccc = WAIT.until(EC.presence_of_element_located((By.XPATH, '/html/body/div/div/div/div/div/div[1]/div/div[1]')))
-  File "C:\Users\78381\anaconda3\lib\site-packages\selenium\webdriver\support\wait.py", line 101, in until
-    raise TimeoutException(message, screen, stacktrace)
-selenium.common.exceptions.TimeoutException: Message: 
-Stacktrace:
-	GetHandleVerifier [0x002672A3+45731]
-	(No symbol) [0x001F2D51]
-	(No symbol) [0x000E880D]
-	(No symbol) [0x0011B940]
-	(No symbol) [0x0011BE0B]
-	(No symbol) [0x0014D1F2]
-	(No symbol) [0x00138024]
-	(No symbol) [0x0014B7A2]
-	(No symbol) [0x00137DD6]
-	(No symbol) [0x001131F6]
-	(No symbol) [0x0011439D]
-	GetHandleVerifier [0x00570716+3229462]
-	GetHandleVerifier [0x005B84C8+3523784]
-	GetHandleVerifier [0x005B214C+3498316]
-	GetHandleVerifier [0x002F1680+611968]
-	(No symbol) [0x001FCCCC]
-	(No symbol) [0x001F8DF8]
-	(No symbol) [0x001F8F1D]
-	(No symbol) [0x001EB2C7]
-	BaseThreadInitThunk [0x755C7BA9+25]
-	RtlInitializeExceptionChain [0x76FBBD2B+107]
-	RtlClearBits [0x76FBBCAF+191]
-	(No symbol) [0x00000000]
-
-
-2023-11-24 09:49:03,017 -  ————————————————————————————————————————————————————————————————————————————————————————
-2023-11-24 09:49:12,878 -  Traceback (most recent call last):
-  File "C:\Users\78381\Desktop\图书馆预约\newblcuLib\reserve.py", line 381, in main
-    quitTry=AutoLockDesk(userConfig)
-  File "C:\Users\78381\Desktop\图书馆预约\newblcuLib\reserve.py", line 228, in AutoLockDesk
-    session,cookies,token,accNo=loginReturnSession(userConfig['username'],userConfig['password'])
-  File "C:\Users\78381\Desktop\图书馆预约\newblcuLib\reserve.py", line 37, in loginReturnSession
-    ccc = WAIT.until(EC.presence_of_element_located((By.XPATH, '/html/body/div/div/div/div/div/div[1]/div/div[1]')))
-  File "C:\Users\78381\anaconda3\lib\site-packages\selenium\webdriver\support\wait.py", line 101, in until
-    raise TimeoutException(message, screen, stacktrace)
-selenium.common.exceptions.TimeoutException: Message: 
-Stacktrace:
-	GetHandleVerifier [0x002672A3+45731]
-	(No symbol) [0x001F2D51]
-	(No symbol) [0x000E880D]
-	(No symbol) [0x0011B940]
-	(No symbol) [0x0011BE0B]
-	(No symbol) [0x0014D1F2]
-	(No symbol) [0x00138024]
-	(No symbol) [0x0014B7A2]
-	(No symbol) [0x00137DD6]
-	(No symbol) [0x001131F6]
-	(No symbol) [0x0011439D]
-	GetHandleVerifier [0x00570716+3229462]
-	GetHandleVerifier [0x005B84C8+3523784]
-	GetHandleVerifier [0x005B214C+3498316]
-	GetHandleVerifier [0x002F1680+611968]
-	(No symbol) [0x001FCCCC]
-	(No symbol) [0x001F8DF8]
-	(No symbol) [0x001F8F1D]
-	(No symbol) [0x001EB2C7]
-	BaseThreadInitThunk [0x755C7BA9+25]
-	RtlInitializeExceptionChain [0x76FBBD2B+107]
-	RtlClearBits [0x76FBBCAF+191]
-	(No symbol) [0x00000000]
-
-
+2023-12-02 11:53:08,601 -  ————————————————————————————————————————————————————————————————————————————————————————
+2023-12-02 11:53:15,987 -  【预约状态】: 预约中(未到签到时间)
+2023-12-02 11:53:16,003 -  【预约信息】: 一层C区 1C043 2023-12-02 12-05-00 2023-12-02 22-00-00 陈浩然
+2023-12-02 11:53:16,007 -   将于 2023-12-02 11:53:00 重新预约...请勿关闭窗口(结束运行请按 Ctrl + c)...
+2023-12-02 11:53:23,735 -  ---提前离开操作: 预约暂未开始，请稍后重试
+2023-12-02 11:53:24,804 -  ---取消预约操作: 删除成功
+2023-12-02 11:53:32,512 -  【预约状态】: 没有预约信息
+2023-12-02 11:53:32,577 -  ---预约操作: 新增成功
+2023-12-02 11:53:32,579 -  【新的预约】:  一层C区 1C043 2023-12-02 12-10-00 2023-12-02 22-00-00 陈浩然
+2023-12-02 11:53:40,058 -  【预约状态】: 预约中(未到签到时间)
+2023-12-02 11:53:40,192 -  【预约信息】: 一层C区 1C043 2023-12-02 12-10-00 2023-12-02 22-00-00 陈浩然
+2023-12-02 11:53:40,193 -   将于 2023-12-02 11:58:00 重新预约...请勿关闭窗口(结束运行请按 Ctrl + c)...
+2023-12-02 11:58:05,829 -  ---提前离开操作: 预约暂未开始，请稍后重试
+2023-12-02 11:58:06,866 -  ---取消预约操作: 删除成功
+2023-12-02 11:58:14,918 -  【预约状态】: 没有预约信息
+2023-12-02 11:58:14,999 -  ---预约操作: 新增成功
+2023-12-02 11:58:14,999 -  【新的预约】:  一层C区 1C043 2023-12-02 12-15-00 2023-12-02 22-00-00 陈浩然
+2023-12-02 11:58:23,646 -  【预约状态】: 预约中(未到签到时间)
+2023-12-02 11:58:23,685 -  【预约信息】: 一层C区 1C043 2023-12-02 12-15-00 2023-12-02 22-00-00 陈浩然
+2023-12-02 11:58:23,686 -   将于 2023-12-02 12:03:00 重新预约...请勿关闭窗口(结束运行请按 Ctrl + c)...
+2023-12-02 12:00:35,123 -  ————————————————————————————————————————————————————————————————————————————————————————
+2023-12-02 12:00:42,204 -  【预约状态】: 预约中(未到签到时间)
+2023-12-02 12:00:42,240 -  【预约信息】: 一层C区 1C043 2023-12-02 12-15-00 2023-12-02 22-00-00 陈浩然
+2023-12-02 12:00:42,244 -   将于 2023-12-02 12:03:00 重新预约...请勿关闭窗口(结束运行请按 Ctrl + c)...
+2023-12-02 12:00:50,420 -  ————————————————————————————————————————————————————————————————————————————————————————
+2023-12-02 12:00:57,410 -  【预约状态】: 预约中(未到签到时间)
+2023-12-02 12:00:57,429 -  【预约信息】: 一层C区 1C043 2023-12-02 12-15-00 2023-12-02 22-00-00 陈浩然
+2023-12-02 12:00:57,432 -   将于 2023-12-02 12:03:00 重新预约...请勿关闭窗口(结束运行请按 Ctrl + c)...
+2023-12-02 12:01:34,618 -  ————————————————————————————————————————————————————————————————————————————————————————
+2023-12-02 12:01:42,418 -  【预约状态】: 预约中(未到签到时间)
+2023-12-02 12:01:42,439 -  【预约信息】: 一层C区 1C043 2023-12-02 12-15-00 2023-12-02 22-00-00 陈浩然
+2023-12-02 12:01:42,442 -   将于 2023-12-02 12:03:00 重新预约...请勿关闭窗口(结束运行请按 Ctrl + c)...
+2023-12-02 12:02:15,062 -   是否需要取消已有预约？是(y) 否(n)---y
+2023-12-02 12:02:15,926 -  ---提前离开操作: 预约暂未开始，请稍后重试
+2023-12-02 12:02:15,952 -  ---取消预约操作: 删除成功
