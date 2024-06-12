@@ -1,0 +1,13 @@
+116: https://edgedl.me.gvt1.com/edgedl/chrome/chrome-for-testing/116.0.5845.96/win64/chromedriver-win64.zip
+117: https://edgedl.me.gvt1.com/edgedl/chrome/chrome-for-testing/117.0.5938.62/win64/chromedriver-win64.zip
+118: https://edgedl.me.gvt1.com/edgedl/chrome/chrome-for-testing/118.0.5993.3/win64/chromedriver-win64.zip
+119: https://edgedl.me.gvt1.com/edgedl/chrome/chrome-for-testing/119.0.6045.105/win64/chromedriver-win64.zip
+120: https://edgedl.me.gvt1.com/edgedl/chrome/chrome-for-testing/120.0.6099.28/win64/chromedriver-win64.zip
+121: https://edgedl.me.gvt1.com/edgedl/chrome/chrome-for-testing/121.0.6129.0/win64/chromedriver-win64.zip
+122: https://storage.googleapis.com/chrome-for-testing-public/122.0.6261.111/win64/chromedriver-win64.zip
+123: https://storage.googleapis.com/chrome-for-testing-public/123.0.6312.86/win64/chromedriver-win64.zip
+124: https://storage.googleapis.com/chrome-for-testing-public/124.0.6367.8/win64/chromedriver-win64.zip
+125: https://storage.googleapis.com/chrome-for-testing-public/125.0.6393.0/win64/chromedriver-win64.zip
+126: https://storage.googleapis.com/chrome-for-testing-public/126.0.6478.55/win64/chromedriver-win64.zip
+127: https://storage.googleapis.com/chrome-for-testing-public/127.0.6523.4/win64/chromedriver-win64.zip
+128: https://storage.googleapis.com/chrome-for-testing-public/128.0.6534.0/win64/chromedriver-win64.zip

@@ -68,25 +68,26 @@ def progressFunc(blocknum, blocksize, totalsize):
     if percent == 100:
         print('')
 
+def load_driver_links(file_path):
+    links = {}
+    with open(file_path, 'r') as file:
+        for line in file:
+            version, url = line.strip().split(': ')
+            links[version] = url
+    return links
+
 def downLoadDriver(save_d,c_v,os_v='win',vlistURL='https://registry.npmmirror.com/-/binary/chromedriver/'):
-    highURL={
-        '116':"https://edgedl.me.gvt1.com/edgedl/chrome/chrome-for-testing/116.0.5845.96/win64/chromedriver-win64.zip",
-        '117':"https://edgedl.me.gvt1.com/edgedl/chrome/chrome-for-testing/117.0.5938.62/win64/chromedriver-win64.zip",
-        '118':"https://edgedl.me.gvt1.com/edgedl/chrome/chrome-for-testing/118.0.5993.3/win64/chromedriver-win64.zip",
-        '119':"https://edgedl.me.gvt1.com/edgedl/chrome/chrome-for-testing/119.0.6045.105/win64/chromedriver-win64.zip",
-        '120':"https://edgedl.me.gvt1.com/edgedl/chrome/chrome-for-testing/120.0.6099.28/win64/chromedriver-win64.zip",
-        '121':"https://edgedl.me.gvt1.com/edgedl/chrome/chrome-for-testing/121.0.6129.0/win64/chromedriver-win64.zip",
-        '122':"https://storage.googleapis.com/chrome-for-testing-public/122.0.6261.111/win64/chromedriver-win64.zip"
-    }
+    highURL=load_driver_links('chromedriver_links.txt')
     os_version={
         'win':"chromedriver_win32.zip",
         'mac':"chromedriver_mac64.zip",
         'mac_ml':"chromedriver_mac64_m1.zip"
     }
     try:
-        if int(c_v.split('.')[0])>122:
-            print("对于版本大于122.*.*的chrome浏览器：")
-            print("请手动前往https://storage.googleapis.com/chrome-for-testing-public/ 下载对应的chromedriver版本")
+        if int(c_v.split('.')[0])>128:
+            print("对于版本大于128.*.*的chrome浏览器：")
+            print("请手动前往https://www.cnblogs.com/aiyablog/articles/17948703 下载对应的chromedriver版本")
+            print("或者在reserve.exe同目录文件下的chromedriver_links.txt中添加chrome浏览器对应版本的chromedriver的url")
             keyIN=input()
         elif int(c_v.split('.')[0])>114:
             # print("大于114的版本")

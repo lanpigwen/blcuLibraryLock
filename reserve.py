@@ -262,10 +262,11 @@ def AutoLockDesk(userConfig):
             logging.info(f' 将于 {cancelTime} 重新预约...请勿关闭窗口(结束运行请按 Ctrl + c)...')
             try:
                 if timeLength>0:
-                    # ctypes.windll.kernel32.SetThreadExecutionState(0x80000002)
-                    ES_CONTINUOUS = 0x80000000
-                    ES_SYSTEM_REQUIRED = 0x00000001
-                    ctypes.windll.kernel32.SetThreadExecutionState(ES_CONTINUOUS | ES_SYSTEM_REQUIRED)
+                    # 会保持不息屏
+                    ctypes.windll.kernel32.SetThreadExecutionState(0x80000002)
+                    # ES_CONTINUOUS = 0x80000000
+                    # ES_SYSTEM_REQUIRED = 0x00000001
+                    # ctypes.windll.kernel32.SetThreadExecutionState(ES_CONTINUOUS | ES_SYSTEM_REQUIRED)
                     time.sleep(timeLength)
                 afterSleep=True
                 #睡醒后再获得一次新session
@@ -349,7 +350,7 @@ def main():
     mail            输入邮箱号 用于提醒意外退出
 ————————————————————————————————————————————————————————————————————————————————————————————
 【注意事项】:电脑下载Chrome浏览器，且保持版本和reserve.exe同目录下的chromedriver.exe版本一致
-【注意事项】:https://registry.npmmirror.com/binary.html?path=chromedriver/ 可获取相应版本的chromedriver.exe    
+【注意事项】:https://googlechromelabs.github.io/chrome-for-testing/#canary 可获取相应版本的chromedriver.exe    
 【注意事项】:请连接校园网使用！！！      
 """)
 
